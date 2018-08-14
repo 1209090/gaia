@@ -1,0 +1,41 @@
+<script src="jquery-3.3.1.js"></script>
+<script src="gaia.js"></script>
+<script>
+  $(function(){
+    window.field = new Field(30, $('#field'))
+    field.draw()
+    $("#order").on("change", function(){
+      let $this = $(this)
+      console.log($this)
+      field.draw($this.val())
+    })
+    $(document).on("click", "polygon", {}, function(){
+      let $this = $(this)
+      let name = $this.parents('g.tile').data('name')
+      field.rotate(name)
+    })
+
+    $(document).on("click", "circle", {}, function(){
+      
+    })
+  })
+</script>
+<style type="text/css">
+text { fill: azure }
+polygon { stroke: azure; stroke-width: 0.1 }
+.planet-oxide { fill: red }
+.planet-swamp { fill: brown }
+.planet-terra { fill: blue }
+.planet-gaia { fill: green }
+.planet-volcanic { fill: orange }
+.planet-transdim { fill: violet }
+.planet-ice { fill: azure }
+.planet-titanium { fill: gray }
+.planet-desert { fill: yellow }
+</style>
+<body>
+  <div>
+    <input id="order" type="text" value="1, 5, 3, 6, 7, 2, 4"></input>
+  </div>
+  <svg id="field" xmlns="http://www.w3.org/2000/svg"></svg>
+</body>
