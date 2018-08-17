@@ -15,6 +15,14 @@ class Field {
     })
   }
 
+  place(q, r, struct, color) {
+    let $group = $(`g [q=${q}][r=${r}]`)
+    $group.find('text').remove()
+    let txt = this.tag("text", {transform: "translate(-10, 4)", class: `struct-${color}`})
+    txt.append(struct)
+    $group.append(txt)
+  }
+
   rotate(tile) {
     const index = this.tiles.findIndex(e => e == tile)
     const center = this.centers[index]
@@ -52,7 +60,7 @@ class Field {
 
   hex(q, r, planet, tile) {
     let offset = this.offset(q, r)
-    let group = this.tag("g", {q: q, r: r, transform: `translate(${offset.x}, ${offset.y})`})
+    let group = this.tag("g", {class: 'hex', q: q, r: r, transform: `translate(${offset.x}, ${offset.y})`})
     let polygon = this.tag("polygon", {points: this.points()})
     polygon.data({tile: tile, coord: [q, r]})
     group.append(polygon)

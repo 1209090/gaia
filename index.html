@@ -1,57 +1,6 @@
 <script src="jquery-3.3.1.js"></script>
 <script src="gaia.js"></script>
-<script>
-  $(function(){
-    window.log = function(text) {
-      let li = $(`<li>${text}</li>`)
-      $('#log').append(li)
-    }
-
-    window.init = function(tiles) {
-      window.field = new Field(30, $('#field'), tiles)
-      field.draw()
-      window.log(`init(${tiles})`)
-    }
-
-    init($('#order').val())
-
-    $("#order").on("change", function(){
-      init($(this).val())
-    })
-
-    $(document).on("click", "polygon", {}, function(){
-      let $this = $(this)
-      let name = $this.parents('g.tile').data('name')
-      field.rotate(name)
-      log(`rotate(${name})`)
-    })
-
-    $(document).on("click", "circle", {}, function(){
-      let $this = $(this)
-      let polygon = $this.parent().find('polygon')
-      $('#info').html(`${$this.data("planet")} @ (${polygon.data('coord').join(', ')})`)
-    })
-
-    $("#run").on("click", function(){
-      let log = $('#log')
-      let init = $('#init').val()
-      let tiles = init.split(/[,\s]+/)
-      let z = tiles.map(function(t){
-        let x = t.split(/#/)
-        return [x[0], x[1] === undefined ? 0 : parseInt(x[1])]
-      })
-      let x = z.map(a => a[0])
-      log.empty()
-      window.init(x.join(', '))
-      z.forEach(function(a){
-        for (var i = 0; i < a[1]; i++) {
-          window.field.rotate(a[0])
-          window.log(`rotate(${a[0]})`)
-        }
-      })
-    })
-  })
-</script>
+<script src="index.js"></script>
 <style type="text/css">
 text { fill: azure }
 polygon { stroke: azure; stroke-width: 0.1 }
@@ -64,13 +13,37 @@ polygon { stroke: azure; stroke-width: 0.1 }
 .planet-ice { fill: azure }
 .planet-titanium { fill: gray }
 .planet-desert { fill: yellow }
+
+.struct-oxide { fill: black }
+.struct-swamp { fill: black }
+.struct-terra { fill: black }
+.struct-gaia { fill: black }
+.struct-volcanic { fill: black }
+.struct-transdim { fill: black }
+.struct-ice { fill: black }
+.struct-titanium { fill: black }
+.struct-desert { fill: black }
 </style>
 <body>
   <div style="float:right">
-    <div id="info"></div>
+    <div id="info">&nbsp;</div>
     <input id="order" type="text" value="1, 5B, 2, 3, 6B, 4, 7B"></input>
     <input id="init" type="text"></input>
     <button id="run">Run</button>
+    <div id="form">
+      <input id="coord" type="text"></input>
+      <select>
+        <option value="build">Build</option>
+      </select>
+      <select id="struct">
+        <option value="M">Mine</option>
+        <option value="TS">Trade Station</option>
+        <option value="PI">Planetary Institute</option>
+        <option value="RL">Research Lab</option>
+        <option value="A">Academy</option>
+      </select>
+      <button id="action">Submit</button>
+    </div>
     <ul id="log"></ul>
   </div>
   <svg id="field" xmlns="http://www.w3.org/2000/svg"></svg>
