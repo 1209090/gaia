@@ -2,21 +2,53 @@
 <script src="gaia.js"></script>
 <script>
   $(function(){
-    window.field = new Field(30, $('#field'))
-    field.draw()
+    window.log = function(text) {
+      let li = $(`<li>${text}</li>`)
+      $('#log').append(li)
+    }
+
+    window.init = function(tiles) {
+      window.field = new Field(30, $('#field'), tiles)
+      field.draw()
+      window.log(`init(${tiles})`)
+    }
+
+    init($('#order').val())
+
     $("#order").on("change", function(){
-      let $this = $(this)
-      console.log($this)
-      field.draw($this.val())
+      init($(this).val())
     })
+
     $(document).on("click", "polygon", {}, function(){
       let $this = $(this)
       let name = $this.parents('g.tile').data('name')
       field.rotate(name)
+      log(`rotate(${name})`)
     })
 
     $(document).on("click", "circle", {}, function(){
-      
+      let $this = $(this)
+      let polygon = $this.parent().find('polygon')
+      $('#info').html(`${$this.data("planet")} @ (${polygon.data('coord').join(', ')})`)
+    })
+
+    $("#run").on("click", function(){
+      let log = $('#log')
+      let init = $('#init').val()
+      let tiles = init.split(/[,\s]+/)
+      let z = tiles.map(function(t){
+        let x = t.split(/#/)
+        return [x[0], x[1] === undefined ? 0 : parseInt(x[1])]
+      })
+      let x = z.map(a => a[0])
+      log.empty()
+      window.init(x.join(', '))
+      z.forEach(function(a){
+        for (var i = 0; i < a[1]; i++) {
+          window.field.rotate(a[0])
+          window.log(`rotate(${a[0]})`)
+        }
+      })
     })
   })
 </script>
@@ -34,8 +66,12 @@ polygon { stroke: azure; stroke-width: 0.1 }
 .planet-desert { fill: yellow }
 </style>
 <body>
-  <div>
-    <input id="order" type="text" value="1, 5, 3, 6, 7, 2, 4"></input>
+  <div style="float:right">
+    <div id="info"></div>
+    <input id="order" type="text" value="1, 5B, 2, 3, 6B, 4, 7B"></input>
+    <input id="init" type="text"></input>
+    <button id="run">Run</button>
+    <ul id="log"></ul>
   </div>
   <svg id="field" xmlns="http://www.w3.org/2000/svg"></svg>
 </body>

@@ -18,7 +18,6 @@ class Field {
   rotate(tile) {
     const index = this.tiles.findIndex(e => e == tile)
     const center = this.centers[index]
-    console.log(`rotate(${tile})`)
     if (this.rotates[tile] === undefined)
       this.rotates[tile] = 1
     else
@@ -59,6 +58,7 @@ class Field {
     group.append(polygon)
     if (planet !== undefined) {
       let circle = this.tag("circle", {class: `planet-${planet}`, r: this.size * 0.6})
+      circle.data({planet: planet})
       group.append(circle)
     }
     //let txt = this.tag("text", {transform: "translate(-10, 4)"})
@@ -105,5 +105,29 @@ class Field {
 
   static get planets() {
     return {"1":{"1":{"-1":"terra","1":"volcanic"},"-2":{"1":"desert"},"-1":{"0":"swamp"},"0":{"2":"oxide"},"2":{"-1":"transdim"}},"3":{"-1":{"2":"terra","0":"gaia"},"0":{"2":"desert","-2":"transdim"},"2":{"-1":"titanium"},"1":{"0":"ice"}},"4":{"2":{"0":"terra"},"1":{"0":"swamp"},"0":{"-1":"oxide","-2":"titanium"},"-1":{"1":"volcanic"},"-2":{"1":"ice"}},"6B":{"1":{"-1":"terra","-2":"transdim","1":"transdim"},"2":{"0":"desert"},"0":{"1":"gaia"}},"6":{"1":{"-1":"terra","1":"transdim","-2":"transdim"},"2":{"0":"desert"},"-1":{"0":"swamp"},"0":{"1":"gaia"}},"8":{"0":{"-2":"terra"},"-1":{"1":"volcanic","2":"transdim"},"1":{"0":"ice"},"2":{"-2":"transdim"}},"10":{"-2":{"2":"terra"},"-1":{"0":"desert","2":"oxide"},"1":{"0":"gaia","-2":"transdim"},"2":{"-2":"transdim"}},"2":{"2":{"-1":"desert"},"-1":{"1":"swamp","2":"oxide","-1":"volcanic"},"0":{"-2":"titanium"},"1":{"-1":"ice","1":"transdim"}},"5":{"0":{"1":"desert","-2":"ice"},"2":{"-1":"oxide","-2":"transdim"},"-1":{"2":"volcanic","0":"gaia"}},"7B":{"1":{"0":"swamp"},"0":{"2":"titanium","-1":"gaia"},"-1":{"1":"gaia"},"-2":{"0":"transdim"}},"7":{"1":{"-2":"swamp","0":"gaia"},"0":{"-1":"oxide","2":"titanium"},"-1":{"1":"gaia"},"-2":{"0":"transdim"}},"9":{"-2":{"2":"swamp"},"-1":{"-1":"volcanic","1":"ice"},"1":{"0":"gaia","-2":"transdim"}},"5B":{"2":{"-1":"oxide","-2":"transdim"},"-1":{"2":"volcanic","0":"gaia"},"0":{"-2":"ice"}}}
+  }
+}
+
+class Faction {
+  constructor(name) {
+    this.factory(name)
+  }
+
+  static get terraforming() {
+    return {terra: 0, oxide: 1, volcanic: 2, desert: 3, swamp: 4, titanium: 5, ice: 6};
+  }
+
+  terraforming_steps(planet) {
+    const idx1 = Faction.terraforming[this.planet]
+    const idx2 = Faction.terraforming[planet]
+    const steps = [0, 1, 2, 3, 3, 2, 1]
+    return steps[Math.abs(idx1 - idx2)]
+  }
+
+  factory(name) {
+    const factions = {
+      Geodens: {planet: "volcanic"}
+    }
+    this.planet = factions[name].planet
   }
 }
