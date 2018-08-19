@@ -1,0 +1,27 @@
+<html>
+  <head>
+    <script src="jquery-3.3.1.js"></script>
+    <script src="field.js"></script>
+    <script src="drawer.js"></script>
+    <script>
+$(function(){
+  window.field = new Field(["5B", 1, 2, 3, "6B", 4, "7B"], {0: 1})
+  window.drawer = new Drawer($('#field'), field, 30)
+  drawer.draw()
+
+  $(document).on("mouseenter", "g.hex", function(){
+    let $this = $(this)
+    let polygon = $this.find('polygon')
+    $('#info').html(polygon.data("human"))
+  })
+})
+    </script>
+    <meta charset="utf-8"/>
+    <meta content="text/html" name="content-type">
+    <link href="gaia.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <div id="info"></div>
+    <svg id="field" xmlns="http://www.w3.org/2000/svg"></svg>
+  </body>
+</html>

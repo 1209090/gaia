@@ -1,0 +1,12 @@
+text { fill: azure }
+polygon { stroke: azure; stroke-width: 0.1 }
+.planet-oxide { fill: red }
+.planet-swamp { fill: brown }
+.planet-terra { fill: blue }
+.planet-gaia { fill: green }
+.planet-volcanic { fill: orange }
+.planet-transdim { fill: violet }
+.planet-ice { fill: azure }
+.planet-titanium { fill: gray }
+.planet-desert { fill: yellow }
+#info { float: right }
